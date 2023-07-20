@@ -10,5 +10,6 @@ typedef struct {
 } size;
 
 void drawTitle();
-int drawSelect();
+void drawSelect();
+size* modeSelect();
 void drawMain();

@@ -11,25 +11,18 @@ size* dsize = new size();
 int main()
 {
 	mode = readIni(fileName);
-//	printf_s("%s\n", fileName);
-//	printf_s("モード=%d\n", mode);
 
-/*	if (mode == 1)
-	{
-		CSV2Array(fileName, dsize, data);
-		printf("%d,%d\n", dsize->xmax, dsize->ymax);
-		for (int i = 0;i < dsize->ymax;i++)
-		{
-			for (int j = 0;j < dsize->xmax; j++) {
-				printf("%s, ", data[i][j]);
-			}
-			printf("\n");
-		}
-	}
-*/
+	// 端末制御の開始
+	initscr();
 
-	/* 端末制御の開始 */
-//	initscr();
+	// カラーの設定
+	start_color();
+	init_pair(1, COLOR_WHITE, COLOR_BLACK); // デフォルト
+	keypad(stdscr, TRUE);
+
+	// 座標の設定
+	int x = 0, y = 0, w, h;
+	getmaxyx(stdscr, h, w);
 
 	/* モードによって挙動を変える */
 	/* 新規作成モードならタイトル表示->サイズ選択->描画画面 */
@@ -39,18 +32,25 @@ int main()
 //	drawTitle();
 //	napms(2000);
 
-//	int key = getch();
-
+	// 新規作成モード
 //	if (mode == 0)
 //	{
-//		while (key != 'a')
-//		{
-			// キー入力を取得
-	//		key = getch();
-			/* スペースなりエンターなりで決定されるまで表示 */
-//			int size = drawSelect();
-//		}
+	// サイズ選択画面
+	dsize = modeSelect();
 //	}
+		// ファイル読み込みモード
+	//	else {
 
+	//	}
+
+//	while (1)
+//	{
+//		erase();
+//		mvaddstr(0, 0, "モード選択終了");
+//		int key = getch();
+//		if (key == 'q') break;
+//		refresh();
+//	}
+	printf("%d, %d\n", dsize->xmax, dsize->ymax);
 	return 0;
 }
