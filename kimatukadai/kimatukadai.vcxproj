@@ -148,11 +148,13 @@
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="kimatukadai.cpp" />
     <ClCompile Include="readdata.cpp" />
+    <ClCompile Include="readini.cpp" />
     <ClCompile Include="Setting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="draw.h" />
     <ClInclude Include="readdata.h" />
+    <ClInclude Include="readini.h" />
     <ClInclude Include="Setting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
