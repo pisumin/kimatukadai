@@ -2,22 +2,41 @@
 #include <string.h>
 #include "draw.h"
 #define CHARBUFF 128
-/* タイトル画面や描画画面の描画を行う関数 */
+/* メイン画面等，画面の描画を行う関数 */
 
 void drawTitle()
 {
 
 }
 
-void drawSelect(){
+void paintBack()
+{
 	erase();
+	// 座標の設定
+	int x = 0, y = 0, w, h;
+	getmaxyx(stdscr, h, w);
+	attrset(COLOR_PAIR(10));
+	for (int i = 0;i < h;i++)
+	{
+		for (int j = 0;j < w;j++)
+		{
+			mvaddch(i, j, ' ');
+		}
+	}
+	refresh();
+}
+
+void drawSelect(){
+	attrset(COLOR_PAIR(1));
+	erase();
+	paintBack();
 	// 座標の設定
 	int x = 0, y = 0, w, h;
 	getmaxyx(stdscr, h, w);
 	// 座標設定
 	const char* select = "描画サイズを選択してください";
 	x = (w - strlen(select)) / 2;
-	y = h / 4;
+	y = h / 3;
 	mvaddstr(y, x, select);
 	select = "(→キーで次へ)";
 	x = (w - strlen(select)) / 2;
@@ -87,6 +106,41 @@ size* modeSelect()
 	}
 
 	return tmp;
+}
+
+void drawPallet()
+{
+	erase();
+	paintBack(); // あとで外す(メインで一気に書くよ！)
+	// 座標の設定
+	int x = 0, y = 0, w, h;
+	getmaxyx(stdscr, h, w);
+	x = (w + 32) / 2 + 12;
+	y = h / 2 - 3;
+	for (int i = 1;i < 10;i++)
+	{
+		attrset(COLOR_PAIR(i));
+		for (int j = 0;j < 2;j++)
+		{
+			// カラー番号を表示
+			if (j == 0) mvprintw(y++, x, "%d 　", i);
+			else mvaddstr(y, x, "　　");
+		}
+		if ((i % 3) == 0)
+		{
+			x = (w + 32) / 2 + 12; y++;
+		}
+		else
+		{
+			x += 4; y--;
+		}
+	}
+	refresh();
+}
+
+void drawPixel(char data[16][16][CHARBUFF])
+{
+
 }
 
 void drawMain()
