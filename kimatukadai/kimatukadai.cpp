@@ -15,21 +15,34 @@ int main()
 
 	// 端末制御の開始
 	initscr();
+	// 入力された文字を表示しないようにする
+	noecho();
+	// カーソルを表示しない
+	curs_set(0);
 
 	// カラーの設定
 	start_color();
-	init_color(8, 1000, 647, 0);	// オレンジ色
-	init_color(9, 871, 721, 529);	// 背景色(BurlyWood)
-	init_pair(1, COLOR_WHITE, COLOR_BLACK);   // デフォルトカラー(カラー1)
+	init_color(8,  1000, 647,  0);	  // オレンジ色
+	init_color(9,  871,  721,  529);  // 背景色(BurlyWood)
+	init_color(10, 1000, 0,    1000); // マゼンタ
+	init_color(11, 1000, 1000, 0);	  // 黄色
+	init_color(12, 545,  271,  76);   // 茶色(SaddleBrown)
+	init_color(13, 1000, 1000, 1000); // 白色(なんかくすんでる気がしたからこっち使う)
+	init_color(14, 0,    1000, 1000); // シアン
+	init_color(15, 373,  620,  627);  // CadetBlue
+
+	init_pair(1, COLOR_WHITE, COLOR_BLACK);   // 黒で描画(カラー1)
 	init_pair(2, COLOR_WHITE, COLOR_RED);	  // 赤で描画(カラー2)
 	init_pair(3, COLOR_WHITE, COLOR_BLUE);	  // 青で描画(カラー3)
 	init_pair(4, COLOR_WHITE, COLOR_GREEN);	  // 緑で描画(カラー4)
-	init_pair(5, COLOR_BLACK, COLOR_CYAN);	  // 水色で描画(カラー5)
+	init_pair(5, COLOR_BLACK, 14);			  // 水色で描画(カラー5)
 	init_pair(6, COLOR_BLACK, 8);			  // オレンジ色で描画(カラー6)
-	init_pair(7, COLOR_BLACK, COLOR_YELLOW);  // 黄色で描画(カラー7) // あんまり黄色に見えへん
-	init_pair(8, COLOR_BLACK, COLOR_MAGENTA); // 紫色で描画(カラー8) // 紫やねんけどマゼンタじゃないよな
-	init_pair(9, COLOR_BLACK, COLOR_WHITE);	  // 白色で描画(カラー9)
+	init_pair(7, COLOR_BLACK, 11);			  // 黄色で描画(カラー7)
+	init_pair(8, COLOR_BLACK, 10);			  // 紫色で描画(カラー8)
+	init_pair(9, COLOR_BLACK, 13);			  // 白色で描画(カラー9)
 	init_pair(10, COLOR_BLACK, 9);			  // 背景色
+	init_pair(11, COLOR_BLACK, 12);			  // キャンバスの縁の色
+	init_pair(12, COLOR_WHITE, 15);			  // カーソル用の色
 	keypad(stdscr, TRUE);
 
 	// 座標の設定
@@ -53,17 +66,7 @@ int main()
 	}
 
 	// メイン画面の表示
-	drawPallet();
-	while (1);
+	drawMain(data, dsize, cnum);
 
-/*	printf("%d, %d\n", dsize->xmax, dsize->ymax);
-	for (int i = 0; i < dsize->ymax; i++)
-	{
-		for (int j = 0;j < dsize->xmax;j++)
-		{
-			printf("%s ", data[i][j]);
-		}
-		printf("\n");
-	}*/
 	return 0;
 }
