@@ -3,13 +3,8 @@
 #include "draw.h"
 #include "readdata.h"
 #define CHARBUFF 128
+
 /* メイン画面等，画面の描画を行う関数 */
-
-void drawTitle()
-{
-
-}
-
 void paintBack()
 {
 	// 座標の設定
@@ -35,7 +30,8 @@ void drawSelect(){
 	p.x = 0; p.y = 0;
 	int w, h;
 	getmaxyx(stdscr, h, w);
-	// 座標設定
+
+	attrset(COLOR_PAIR(10));
 	const char* select = "描画サイズを選択してください";
 	p.x = (w - strlen(select)) / 2;
 	p.y = h / 3;
@@ -118,7 +114,7 @@ void drawPallet()
 	int w, h;
 	getmaxyx(stdscr, h, w);
 	p.x = (w + 32) / 2 + 12;
-	p.y = h / 2 - 3;
+	p.y = h / 2 - 2;
 	for (int i = 1;i < 10;i++)
 	{
 		attrset(COLOR_PAIR(i));
@@ -150,6 +146,11 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[
 	point *cp = new point();
 	cp->x = 0, cp->y = 0;
 	p = setPoint(dsize, cp);
+	// 現在のカラーを表示
+	point pp;
+	pp.x = (w + 32) / 2 + 12;
+	pp.y = h / 2 - 3;
+
 	if (mode == 1)
 	{
 		// data内の情報に基づいて色を描画
@@ -176,6 +177,8 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[
 
 	while (1)
 	{
+		attrset(COLOR_PAIR(10));
+		mvprintw(pp.y, pp.x, "選択中のカラー:%d", cnum);
 		int key = getch();
 		// q押下でファイル書き込みを行って終了
 		if (key == 'q')
@@ -185,8 +188,11 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[
 				break;
 			}
 			else {
-				// 位置などあとで調整
-				mvaddstr(0, 0, "書き込みに失敗しました");
+				char tmp[CHARBUFF] = "書き込みに失敗しました";
+				mvaddstr(0, (w-strlen(tmp))/2, tmp);
+				refresh();
+				napms(1000);
+				mvaddstr(0, (w - strlen(tmp)) / 2, "　　　　　　　　　　　");
 			}
 		}
 
@@ -354,6 +360,21 @@ void drawCanvas()
 	}
 }
 
+void drawSuccess()
+{
+	paintBack();
+	// 座標の設定
+	point p;
+	int w, h;
+	getmaxyx(stdscr, h, w);
+	char str[CHARBUFF] = "書き込みが終了しました";
+	p.x = (w - strlen(str)) / 2;
+	p.y = h / 2;
+	mvaddstr(p.y, p.x, str);
+	refresh();
+	napms(2000);
+}
+
 void drawMain(int data[16][16],size *dsize,int cnum, int mode, char fileName[CHARBUFF])
 {
 	erase();
@@ -361,4 +382,5 @@ void drawMain(int data[16][16],size *dsize,int cnum, int mode, char fileName[CHA
 	drawPallet();
 	drawCanvas();
 	drawPixel(data, dsize, cnum, mode, fileName);
+	drawSuccess();
 }

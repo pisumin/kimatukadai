@@ -24,4 +24,5 @@ void drawPixel(int data[16][16], size *dsize, int cnum, int mode, char fileName[
 point* setPoint(size* dsize, point *p); // 座標を設定する関数
 void paintPixel(size* dsize, point* cp, int cnum); // 1マス分を塗るための関数
 void drawCanvas();	// 描画エリアを描画
+void drawSuccess(); // 書き込みの正常終了を表示
 void drawMain(int data[16][16], size *dsize, int cnum, int mode, char fileName[CHARBUFF]);	// メイン画面を描画する関数

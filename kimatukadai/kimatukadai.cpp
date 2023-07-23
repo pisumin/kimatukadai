@@ -38,7 +38,7 @@ int main()
 	init_pair(5, COLOR_BLACK, 14);			  // 水色で描画(カラー5)
 	init_pair(6, COLOR_BLACK, 8);			  // オレンジ色で描画(カラー6)
 	init_pair(7, COLOR_BLACK, 11);			  // 黄色で描画(カラー7)
-	init_pair(8, COLOR_BLACK, 10);			  // 紫色で描画(カラー8)
+	init_pair(8, COLOR_BLACK, 10);			  // ピンク色で描画(カラー8)
 	init_pair(9, COLOR_BLACK, 13);			  // 白色で描画(カラー9)
 	init_pair(10, COLOR_BLACK, 9);			  // 背景色
 	init_pair(11, COLOR_BLACK, 12);			  // キャンバスの縁の色
@@ -72,8 +72,6 @@ int main()
 
 	// メイン画面の表示
 	drawMain(data, dsize, cnum, mode, fileName);
-
-	printf_s("ファイルへの書き込みが終了しました．\n");
 
 	return 0;
 }

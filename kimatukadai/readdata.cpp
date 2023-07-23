@@ -3,6 +3,7 @@
 #include <string.h>
 #include "readdata.h"
 #include "draw.h"
+#include "Setting.h"
 
 errno_t CSV2Array(const char* fileName, size* dsize, int data[16][16])
 {
