@@ -1,6 +1,7 @@
 #include <curses.h>
 #include <string.h>
 #include "draw.h"
+#include "readdata.h"
 #define CHARBUFF 128
 /* メイン画面等，画面の描画を行う関数 */
 
@@ -139,7 +140,7 @@ void drawPallet()
 	refresh();
 }
 
-void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
+void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[CHARBUFF])
 {
 	// 座標の設定
 	point* p = new point();
@@ -176,7 +177,19 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 	while (1)
 	{
 		int key = getch();
-		if (key == 'q') break;
+		// q押下でファイル書き込みを行って終了
+		if (key == 'q')
+		{
+			if (Array2CSV(dsize, data, fileName, mode) == 0)
+			{
+				break;
+			}
+			else {
+				// 位置などあとで調整
+				mvaddstr(0, 0, "書き込みに失敗しました");
+			}
+		}
+
 		switch (key)
 		{
 		// 描画位置の移動
@@ -341,11 +354,11 @@ void drawCanvas()
 	}
 }
 
-void drawMain(int data[16][16],size *dsize,int cnum, int mode)
+void drawMain(int data[16][16],size *dsize,int cnum, int mode, char fileName[CHARBUFF])
 {
 	erase();
 	paintBack();
 	drawPallet();
 	drawCanvas();
-	drawPixel(data, dsize, cnum, mode);
+	drawPixel(data, dsize, cnum, mode, fileName);
 }

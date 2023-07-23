@@ -65,12 +65,15 @@ int main()
 	}
 	// ファイル読み込みモード
 	else {
-		// データの読み込み
-		CSV2Array(fileName, dsize, data);
+		// データの読み込み(読み込み中にエラーが発生したらそのまま終了する)
+		if (CSV2Array(fileName, dsize, data) != 0)
+			return -1;
 	}
 
 	// メイン画面の表示
-	drawMain(data, dsize, cnum, mode);
+	drawMain(data, dsize, cnum, mode, fileName);
+
+	printf_s("ファイルへの書き込みが終了しました．\n");
 
 	return 0;
 }

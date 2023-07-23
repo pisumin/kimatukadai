@@ -4,7 +4,7 @@
 #include "readdata.h"
 #include "draw.h"
 
-void CSV2Array(const char* fileName, size* dsize, int data[16][16])
+errno_t CSV2Array(const char* fileName, size* dsize, int data[16][16])
 {
 	/* 色のデータを格納する配列 */
 	/* とりあえず一番大きいサイズで指定しておく */
@@ -18,6 +18,7 @@ void CSV2Array(const char* fileName, size* dsize, int data[16][16])
 	if (error != 0)
 	{
 		fprintf_s(stderr, "ファイルが開けません\n");
+		return error;
 	}
 	else
 	{
@@ -55,5 +56,47 @@ void CSV2Array(const char* fileName, size* dsize, int data[16][16])
 			// 次の行に移動
 			rcnt++;
 		}
+		return error;
 	}
+}
+
+// ドット画像のデータを読み込む
+int Array2CSV(size* dsize, int data[16][16], char fileName[CHARBUFF], int mode)
+{
+	char newFile[CHARBUFF];
+	if (mode)
+	{
+		char tmp[CHARBUFF];
+		strncpy_s(tmp, fileName, strlen(fileName)-4);
+		snprintf(newFile, CHARBUFF, "%s_1.csv", tmp);
+	}
+	else
+	{
+		sprintf_s(newFile, "pixelData.csv");
+	}
+	FILE* fp;
+	errno_t error;
+	error = fopen_s(&fp, newFile, "w");
+
+	if (error != 0) return -1;
+	else {
+		// サイズを格納
+		char size_s[CHARBUFF];
+		snprintf(size_s, CHARBUFF, "%d,%d\n", dsize->xmax, dsize->ymax);
+		fputs(size_s, fp);
+
+		// カラー番号のデータを格納
+		for (int i = 0; i < dsize->ymax; i++)
+		{
+			for (int j = 0;j < dsize->xmax;j++)
+			{
+				char cnum_s[CHARBUFF];
+				snprintf(cnum_s, CHARBUFF, "%d,", data[i][j]);
+				fputs(cnum_s, fp);
+			}
+			fputs("\n", fp);
+		}
+		fclose(fp);
+	}
+	return 0;
 }
