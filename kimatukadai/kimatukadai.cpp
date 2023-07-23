@@ -6,7 +6,7 @@
 int mode; /* 描画モード 0:新規作成, 1:*/
 int cnum; /* カラー番号 */
 char fileName[CHARBUFF];
-char data[16][16][CHARBUFF]; /* 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納 */
+int data[16][16]; /* 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納 */
 size* dsize = new size();
 
 int main()
@@ -45,10 +45,6 @@ int main()
 	init_pair(12, COLOR_WHITE, 15);			  // カーソル用の色
 	keypad(stdscr, TRUE);
 
-	// 座標の設定
-	int x = 0, y = 0, w, h;
-	getmaxyx(stdscr, h, w);
-
 	/* モードによって挙動を変える */
 	/* 新規作成モードならサイズ選択->描画画面 */
 	/* ファイル読み込みなら描画画面 */
@@ -66,7 +62,7 @@ int main()
 	}
 
 	// メイン画面の表示
-	drawMain(data, dsize, cnum);
+	drawMain(data, dsize, cnum, mode);
 
 	return 0;
 }

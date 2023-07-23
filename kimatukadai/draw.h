@@ -20,7 +20,8 @@ void paintBack();	// 背景を塗りつぶす
 void drawSelect();	// サイズ一覧を描画する関数
 size* modeSelect();	// モード選択画面を描画する関数
 void drawPallet();	// パレットを描画する関数
-void drawPixel(char data[16][16][CHARBUFF], size *dsize, int cmode);// ドット画像を作成する関数
+void drawPixel(int data[16][16], size *dsize, int cnum, int mode);// ドット画像を作成する関数
 point* setPoint(size* dsize, point *p); // 座標を設定する関数
+void paintPixel(size* dsize, point* cp, int cnum); // 1マス分を塗るための関数
 void drawCanvas();	// 描画エリアを描画
-void drawMain(char data[16][16][CHARBUFF], size *dsize, int cnum);	// メイン画面を描画する関数
+void drawMain(int data[16][16], size *dsize, int cnum, int mode);	// メイン画面を描画する関数

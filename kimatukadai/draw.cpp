@@ -140,7 +140,7 @@ void drawPallet()
 	refresh();
 }
 
-void drawPixel(char data[16][16][CHARBUFF], size* dsize, int cnum)
+void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 {
 	// 座標の設定
 	point* p = new point();
@@ -150,19 +150,38 @@ void drawPixel(char data[16][16][CHARBUFF], size* dsize, int cnum)
 	point *cp = new point();
 	cp->x = 0, cp->y = 0;
 	p = setPoint(dsize, cp);
-	attrset(COLOR_PAIR(12));
+	if (mode == 1)
+	{
+		// data内の情報に基づいて色を描画
+		for (int i = 0;i < dsize->ymax; i++)
+		{
+			for (int j = 0;j < dsize->xmax;j++)
+			{
+				paintPixel(dsize, cp, data[i][j]);
+				cp->x++;
+			}
+			cp->x = 0;
+			cp->y++;
+		}
+	}
+
 	// 今どこにいるかを示す(半角カーソルを表示)
+	cp->x = 0; cp->y = 0;
+	p = setPoint(dsize, cp);
+	attrset(COLOR_PAIR(12));
 	mvaddstr(p->y, p->x, " ");
 	refresh();
+
 	while (1)
 	{
 		int key = getch();
 		switch (key)
 		{
+		// 描画位置の移動
 		case KEY_RIGHT:
 			if (cp->x != dsize->xmax - 1)
 			{
-				attrset(COLOR_PAIR(9));
+				attrset(COLOR_PAIR((long)data[cp->y][cp->x]));
 				mvaddstr(p->y, p->x, " ");
 				cp->x++;
 				p = setPoint(dsize, cp);
@@ -173,7 +192,7 @@ void drawPixel(char data[16][16][CHARBUFF], size* dsize, int cnum)
 		case KEY_LEFT:
 			if (cp->x != 0)
 			{
-				attrset(COLOR_PAIR(9));
+				attrset(COLOR_PAIR((long)data[cp->y][cp->x]));
 				mvaddstr(p->y, p->x, " ");
 				cp->x--;
 				p = setPoint(dsize, cp);
@@ -184,7 +203,7 @@ void drawPixel(char data[16][16][CHARBUFF], size* dsize, int cnum)
 		case KEY_UP:
 			if (cp->y != 0)
 			{
-				attrset(COLOR_PAIR(9));
+				attrset(COLOR_PAIR((long)data[cp->y][cp->x]));
 				mvaddstr(p->y, p->x, " ");
 				cp->y--;
 				p = setPoint(dsize, cp);
@@ -195,7 +214,7 @@ void drawPixel(char data[16][16][CHARBUFF], size* dsize, int cnum)
 		case KEY_DOWN:
 			if (cp->y != dsize->ymax - 1)
 			{
-				attrset(COLOR_PAIR(9));
+				attrset(COLOR_PAIR((long)data[cp->y][cp->x]));
 				mvaddstr(p->y, p->x, " ");
 				cp->y++;
 				p = setPoint(dsize, cp);
@@ -216,6 +235,23 @@ point *setPoint(size* dsize, point *cp)
 	rp->x = (w - 32) / 2 + cp->x * 2 * (16 / dsize->xmax);
 	rp->y = (h - 16) / 2 + cp->y * (16 / dsize->ymax);
 	return rp;
+}
+
+void paintPixel(size* dsize, point *cp, int cnum)
+{
+	point *p = setPoint(dsize, cp);
+	int tmp = p->x;
+	for (int i = 0;i < 16 / dsize->ymax;i++)
+	{
+		for (int j = 0; j < 16 / dsize->xmax * 2; j++)
+		{
+			attrset(COLOR_PAIR(cnum));
+			mvaddstr(p->y, p->x, " ");
+			p->x++;
+		}
+		p->x = tmp;
+		p->y++;
+	}
 }
 
 void drawCanvas()
@@ -254,15 +290,11 @@ void drawCanvas()
 	}
 }
 
-void drawMain(char data[16][16][CHARBUFF],size *dsize,int cnum)
+void drawMain(int data[16][16],size *dsize,int cnum, int mode)
 {
 	erase();
 	paintBack();
 	drawPallet();
 	drawCanvas();
-	while (1)
-	{
-		drawPixel(data, dsize, cnum);
-		refresh();
-	}
+	drawPixel(data, dsize, cnum, mode);
 }

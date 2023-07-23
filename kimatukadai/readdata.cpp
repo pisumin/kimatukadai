@@ -4,7 +4,7 @@
 #include "readdata.h"
 #include "draw.h"
 
-void CSV2Array(const char* fileName, size* dsize, char data[16][16][CHARBUFF])
+void CSV2Array(const char* fileName, size* dsize, int data[16][16])
 {
 	/* 色のデータを格納する配列 */
 	/* とりあえず一番大きいサイズで指定しておく */
@@ -40,7 +40,7 @@ void CSV2Array(const char* fileName, size* dsize, char data[16][16][CHARBUFF])
 				else {
 					if (ccnt <= dsize->xmax)
 					{
-						*data[datar][datac++] = *p1;
+						data[datar][datac++] = atoi(p1);
 					}
 				}
 				p1 = strtok_s(NULL, delim, &ctk);
