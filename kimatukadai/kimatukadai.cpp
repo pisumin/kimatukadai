@@ -4,9 +4,9 @@
 #include "readdata.h"
 
 int mode; /* 描画モード 0:新規作成, 1:*/
-int cnum; /* カラー番号 */
+int cnum = 1; /* カラー番号 */
 char fileName[CHARBUFF];
-int data[16][16]; /* 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納 */
+int data[16][16] = {}; /* 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納 */
 size* dsize = new size();
 
 int main()
@@ -52,6 +52,14 @@ int main()
 	// 新規作成モード
 	if (mode == 0)
 	{
+		// 配列を白色で初期化
+		for (int i = 0; i < 16;i++)
+		{
+			for (int j = 0;j < 16;j++)
+			{
+				data[i][j] = 9;
+			}
+		}
 	// サイズ選択画面
 		dsize = modeSelect();
 	}

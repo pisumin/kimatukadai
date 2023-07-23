@@ -28,7 +28,6 @@ void paintBack()
 }
 
 void drawSelect(){
-	attrset(COLOR_PAIR(1));
 	paintBack();
 	// 座標の設定
 	point p;
@@ -171,10 +170,13 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 	attrset(COLOR_PAIR(12));
 	mvaddstr(p->y, p->x, " ");
 	refresh();
+	// カーソル表示の有無(1->有，0->無)
+	int curs = 1;
 
 	while (1)
 	{
 		int key = getch();
+		if (key == 'q') break;
 		switch (key)
 		{
 		// 描画位置の移動
@@ -185,8 +187,11 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 				mvaddstr(p->y, p->x, " ");
 				cp->x++;
 				p = setPoint(dsize, cp);
-				attrset(COLOR_PAIR(12));
-				mvaddstr(p->y, p->x, " ");
+				if (curs)
+				{
+					attrset(COLOR_PAIR(12));
+					mvaddstr(p->y, p->x, " ");
+				}
 			}
 			break;
 		case KEY_LEFT:
@@ -196,8 +201,11 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 				mvaddstr(p->y, p->x, " ");
 				cp->x--;
 				p = setPoint(dsize, cp);
-				attrset(COLOR_PAIR(12));
-				mvaddstr(p->y, p->x, " ");
+				if (curs)
+				{
+					attrset(COLOR_PAIR(12));
+					mvaddstr(p->y, p->x, " ");
+				}
 			}
 			break;
 		case KEY_UP:
@@ -207,8 +215,11 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 				mvaddstr(p->y, p->x, " ");
 				cp->y--;
 				p = setPoint(dsize, cp);
-				attrset(COLOR_PAIR(12));
-				mvaddstr(p->y, p->x, " ");
+				if (curs)
+				{
+					attrset(COLOR_PAIR(12));
+					mvaddstr(p->y, p->x, " ");
+				}
 			}
 			break;
 		case KEY_DOWN:
@@ -218,9 +229,49 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode)
 				mvaddstr(p->y, p->x, " ");
 				cp->y++;
 				p = setPoint(dsize, cp);
+				if (curs)
+				{
+					attrset(COLOR_PAIR(12));
+					mvaddstr(p->y, p->x, " ");
+				}
+			}
+			break;
+		// カラーの変更
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			cnum = key - '0';
+			break;
+		// p押下でその色で今指してるマスに描画
+		case 'p':
+			paintPixel(dsize, cp, cnum);
+			data[cp->y][cp->x] = cnum;
+			break;
+		// c押下でカーソル表示の切替
+		case 'c':
+			// カーソル表示有
+			if (curs)
+			{
+				curs = 0;
+				//カーソルを消す
+				attrset(COLOR_PAIR((long)data[cp->y][cp->x]));
+				mvaddstr(p->y, p->x, " ");
+			}
+			else
+			{
+				curs = 1;
+				// カーソルを表示
 				attrset(COLOR_PAIR(12));
 				mvaddstr(p->y, p->x, " ");
 			}
+			break;
+		default:
 			break;
 		}
 		refresh();
