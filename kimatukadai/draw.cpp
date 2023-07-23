@@ -20,39 +20,43 @@ void paintBack()
 			mvaddch(i, j, ' ');
 		}
 	}
-	refresh();
 }
 
 void drawSelect(){
 	paintBack();
 	// 座標の設定
-	point p;
-	p.x = 0; p.y = 0;
+	point* p = new point();
+	p->x = 0; p->y = 0;
 	int w, h;
 	getmaxyx(stdscr, h, w);
 
 	attrset(COLOR_PAIR(10));
 	const char* select = "描画サイズを選択してください";
-	p.x = (w - strlen(select)) / 2;
-	p.y = h / 3;
-	mvaddstr(p.y, p.x, select);
-	select = "(→キーで次へ)";
-	p.x = (w - strlen(select)) / 2;
-	mvaddstr(++p.y, p.x, select);
+	p->x = (w - strlen(select)) / 2;
+	p->y = h / 3;
+	mvaddstr(p->y, p->x, select);
+	select = "(↑↓キーで選択、→キーで決定)";
+	p->x = (w - strlen(select)) / 2;
+	mvaddstr(++p->y, p->x, select);
 
-	p.y = h / 2;
+	// サイズの表示枠を描画
+	p->x = (w - 3 * strlen("04 × 04")) / 2 - 4;
+	p->y = h / 2;
+	drawFrame(p, 3 * strlen("04 × 04") + 10, h / 2 - 2);
+
+	p->y = h / 2;
 	int size = 4;
+	attrset(COLOR_PAIR(9));
 	/* 選択できるサイズを表示 */
 	for (int i = 0;i < 3; i++)
 	{
 		char sizes[CHARBUFF];
 		sprintf_s(sizes, "%02d × %02d", size, size);
-		p.x = (w - strlen(sizes)) / 2;
-		p.y += h / 8;
-		mvaddstr(p.y, p.x, sizes);
+		p->x = (w - strlen(sizes)) / 2;
+		p->y += h / 8;
+		mvaddstr(p->y, p->x, sizes);
 		size *= 2;
 	}
-	refresh();
 }
 
 size* modeSelect()
@@ -68,6 +72,7 @@ size* modeSelect()
 	{
 		erase();
 		drawSelect();
+		attrset(COLOR_PAIR(9));
 		mvaddstr(p.y, p.x, "→");
 		// スペースでサイズ決定
 		int key = getch();
@@ -133,7 +138,6 @@ void drawPallet()
 			p.x += 4; p.y--;
 		}
 	}
-	refresh();
 }
 
 void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[CHARBUFF])
@@ -149,7 +153,7 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[
 	// 現在のカラーを表示
 	point pp;
 	pp.x = (w + 32) / 2 + 12;
-	pp.y = h / 2 - 3;
+	pp.y = h / 2 - 4;
 
 	if (mode == 1)
 	{
@@ -179,6 +183,7 @@ void drawPixel(int data[16][16], size* dsize, int cnum, int mode, char fileName[
 	{
 		attrset(COLOR_PAIR(10));
 		mvprintw(pp.y, pp.x, "選択中のカラー:%d", cnum);
+
 		int key = getch();
 		// q押下でファイル書き込みを行って終了
 		if (key == 'q')
@@ -370,9 +375,64 @@ void drawSuccess()
 	char str[CHARBUFF] = "書き込みが終了しました";
 	p.x = (w - strlen(str)) / 2;
 	p.y = h / 2;
+	attrset(COLOR_PAIR(10));
 	mvaddstr(p.y, p.x, str);
 	refresh();
 	napms(2000);
+}
+
+void drawFrame(point* sp, int xs, int ys)
+{
+	point* tp = new point();
+	tp->x = sp->x - 2; tp->y = sp->y - 1;
+	// 枠内を白色で，枠外を水色(カーソルと同色)で塗る
+	for (int i = 0;i < ys + 2;i++)
+	{
+		for (int j = 0;j < xs + 2; j++)
+		{
+			if (i == 0 || i == ys + 1)
+			{
+				attrset(COLOR_PAIR(12));
+				mvaddstr(tp->y, tp->x, " ");
+			}
+			else {
+				if (j <= 1 || j >= xs)
+				{
+					attrset(COLOR_PAIR(12));
+					mvaddstr(tp->y, tp->x, " ");
+				}
+				else {
+					attrset(COLOR_PAIR(9));
+					mvaddstr(tp->y, tp->x, " ");
+				}
+			}
+			tp->x++;
+		}
+		tp->x = sp->x - 2;
+		tp->y++;
+	}
+}
+
+void drawManual()
+{
+	// 座標の設定
+	point* p = new point();
+	int w, h;
+	getmaxyx(stdscr, h, w);
+	// 描画枠を白色で，描画枠のまわりを茶色で示す
+	p->x = (w - 32) / 2 - 38;
+	p->y = h / 2 - 3;
+	drawFrame(p, 32, 7);
+
+	// 操作方法を描画
+	p->x = (w - 32) / 2 - 36;
+	p->y = h / 2 - 2;
+	attrset(COLOR_PAIR(9));
+	mvaddstr(p->y++, p->x, "矢印キー：描画マスの移動");
+	mvaddstr(p->y++, p->x, "数字キー：色の変更");
+	mvaddstr(p->y++, p->x, "p 　　　：描画");
+	mvaddstr(p->y++, p->x, "c 　　　：カーソル表示切替");
+	mvaddstr(p->y, p->x, "q 　　　：終了");
 }
 
 void drawMain(int data[16][16],size *dsize,int cnum, int mode, char fileName[CHARBUFF])
@@ -381,6 +441,7 @@ void drawMain(int data[16][16],size *dsize,int cnum, int mode, char fileName[CHA
 	paintBack();
 	drawPallet();
 	drawCanvas();
+	drawManual();
 	drawPixel(data, dsize, cnum, mode, fileName);
 	drawSuccess();
 }

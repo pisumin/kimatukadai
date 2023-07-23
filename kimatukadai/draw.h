@@ -15,7 +15,6 @@ typedef struct {
 	int y;
 } point;
 
-void drawTitle();	// タイトルを描画する関数
 void paintBack();	// 背景を塗りつぶす
 void drawSelect();	// サイズ一覧を描画する関数
 size* modeSelect();	// モード選択画面を描画する関数
@@ -25,4 +24,6 @@ point* setPoint(size* dsize, point *p); // 座標を設定する関数
 void paintPixel(size* dsize, point* cp, int cnum); // 1マス分を塗るための関数
 void drawCanvas();	// 描画エリアを描画
 void drawSuccess(); // 書き込みの正常終了を表示
+void drawFrame(point* sp, int xs, int ys); // 枠を描画
+void drawManual(); // 操作方法を描画
 void drawMain(int data[16][16], size *dsize, int cnum, int mode, char fileName[CHARBUFF]);	// メイン画面を描画する関数
