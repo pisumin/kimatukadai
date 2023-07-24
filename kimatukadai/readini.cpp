@@ -3,9 +3,11 @@
 #include <string.h>
 #include "Setting.h"
 
+/* 設定ファイルを読み込み．描画モードを返す
+	fileName : ファイルから読み込みモードの時に，読み込むファイル名を格納するためのファイル*/
 int readIni(char* fileName)
 {
-	/* 設定ファイルを読み込み */
+	// 設定ファイルを読み込み
 	char currentDirectory[CHARBUFF];
 	getCurrentDirectory(currentDirectory);
 
@@ -21,13 +23,13 @@ int readIni(char* fileName)
 	{
 		if (strcmp(keyValue, "None") == 0)
 		{
-			return 0; /* 新規作成モード */
+			return 0; // 新規作成モード
 		}
 		else {
 			char tmp[CHARBUFF];
 			sprintf_s(tmp, "%s\\%s", currentDirectory, keyValue);
 			strcpy_s(fileName, CHARBUFF, tmp);
-			return 1; /* ファイルから読み込み */
+			return 1; // ファイルから読み込みモード
 		}
 	}
 	else {

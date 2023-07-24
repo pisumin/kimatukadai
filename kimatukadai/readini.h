@@ -1,3 +1,3 @@
 #pragma once
 
-int readIni(char* fileName);
+int readIni(char* fileName); // iniƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ

@@ -3,27 +3,26 @@
 #include "readini.h"
 #include "readdata.h"
 
-int mode; /* 描画モード 0:新規作成, 1:*/
-int cnum = 1; /* カラー番号 */
-char fileName[CHARBUFF];
-int data[16][16] = {}; /* 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納 */
+int mode; // 描画モード 0:新規作成, 1:ファイルから読み込み
+int cnum = 1; // カラー番号
+char fileName[CHARBUFF]; // 設定ファイルのファイル名
+int data[16][16] = {}; // 16(y方向)×16(x方向)の文字列配列 ファイルから読み込んだ際のデータを格納．描画サイズが未知なので最大にしておく．
 size* dsize = new size();
 
 int main()
 {
+	// 設定ファイルの読み込み
 	mode = readIni(fileName);
+	if (mode == -1)	return -1;
 
-	// 端末制御の開始
-	initscr();
-	// 入力された文字を表示しないようにする
-	noecho();
-	// カーソルを表示しない
-	curs_set(0);
+	initscr(); 		// 端末制御の開始
+	noecho();		// 入力された文字を表示しないようにする
+	curs_set(0);	// カーソルを表示しない
 
-	// カラーの設定
+	// 色の設定
 	start_color();
 	init_color(8,  1000, 647,  0);	  // オレンジ色
-	init_color(9,  871,  721,  529);  // 背景色(BurlyWood)
+	init_color(9,  1000, 1000, 878);  // 背景色(Light Yellow)
 	init_color(10, 1000, 0,    1000); // マゼンタ
 	init_color(11, 1000, 1000, 0);	  // 黄色
 	init_color(12, 545,  271,  76);   // 茶色(SaddleBrown)
@@ -43,16 +42,17 @@ int main()
 	init_pair(10, COLOR_BLACK, 9);			  // 背景色
 	init_pair(11, COLOR_BLACK, 12);			  // キャンバスの縁の色
 	init_pair(12, COLOR_WHITE, 15);			  // カーソル用の色
-	keypad(stdscr, TRUE);
 
-	/* モードによって挙動を変える */
-	/* 新規作成モードならサイズ選択->描画画面 */
-	/* ファイル読み込みなら描画画面 */
+	keypad(stdscr, TRUE);	// キー入力をON
+
+	// モードによって挙動を変える
+	// 新規作成モードならサイズ選択->描画画面
+	// ファイル読み込みなら描画画面
 
 	// 新規作成モード
 	if (mode == 0)
 	{
-		// 配列を白色で初期化
+		// 配列を白色(カラー番号9)で初期化
 		for (int i = 0; i < 16;i++)
 		{
 			for (int j = 0;j < 16;j++)
@@ -60,12 +60,12 @@ int main()
 				data[i][j] = 9;
 			}
 		}
-	// サイズ選択画面
+		// サイズ選択画面．選択された描画サイズを受け取る
 		dsize = modeSelect();
 	}
 	// ファイル読み込みモード
 	else {
-		// データの読み込み(読み込み中にエラーが発生したらそのまま終了する)
+		// データの読み込み(読み込み中にエラーが発生したらそのまま異常終了する)
 		if (CSV2Array(fileName, dsize, data) != 0)
 			return -1;
 	}
