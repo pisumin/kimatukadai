@@ -38,6 +38,14 @@ void drawSelect(){
 	getmaxyx(stdscr, h, w);
 
 	attrset(COLOR_PAIR(10));
+	const char* info = "ドット絵を作成します";
+	p->x = (w - strlen(info)) / 2;
+	p->y = h / 4;
+	mvaddstr(p->y, p->x, info);
+	info = "(ファイルから読み込む場合はiniファイルにファイル名を記述してください)";
+	p->x = (w - strlen(info)) / 2 + 1;
+	p->y = h / 4 + 1;
+	mvaddstr(p->y, p->x, info);
 	const char* select = "描画サイズを選択してください";
 	p->x = (w - strlen(select)) / 2;
 	p->y = h / 3;
