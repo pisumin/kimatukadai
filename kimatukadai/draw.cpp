@@ -27,7 +27,8 @@ void paintBack()
 }
 
 /* サイズ選択画面の描画．ここでは描画のみ行う．*/
-void drawSelect(){
+void drawSelect()
+{
 	// 背景
 	paintBack();
 
