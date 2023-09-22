@@ -1,4 +1,4 @@
-#define CHARBUFF 128
+#define CHARBUFF 256
 #include <stdio.h>
 #include <string.h>
 #include "Setting.h"

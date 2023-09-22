@@ -2,7 +2,7 @@
 #include <string.h>
 #include "draw.h"
 #include "readdata.h"
-#define CHARBUFF 128
+#define CHARBUFF 256
 
 /* ƒƒCƒ“‰æ–Ê“™C‰æ–Ê‚Ì•`‰æ‚ğs‚¤ */
 

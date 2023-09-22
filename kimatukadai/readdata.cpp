@@ -17,7 +17,6 @@ errno_t CSV2Array(const char* fileName, size* dsize, int data[16][16])
 	error = fopen_s(&fp, fileName, "r");
 	if (error != 0)
 	{
-		fprintf_s(stderr, "ファイルが開けません\n");
 		return error;
 	}
 	else

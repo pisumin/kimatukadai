@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <curses.h>
-#define CHARBUFF 128
+#define CHARBUFF 256
 
 /* 描画サイズ
 	xmax : x方向の大きさ(幅)，ymax : y方向の大きさ(高さ) */
